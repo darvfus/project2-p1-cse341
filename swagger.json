@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Users API",
-    "description": "API for managing user contacts",
+    "description": "API for managing cinema Rommero",
     "version": "1.0.0"
   },
   "host": "https://project2-p1-cse341.onrender.com",
