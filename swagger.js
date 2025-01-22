@@ -5,8 +5,8 @@ const doc = {
     title: "Users API",
     description: "API for managing user contacts"
   },
-  host: 'localhost:3000', // URL pública de tu servidor en producción
-  schemes: ["http"], // Usar HTTPS en producción
+  host: 'https://project2-p1-cse341.onrender.com', // URL pública de tu servidor en producción
+  schemes: ["https"], // Usar HTTPS en producción
 };
 
 const outputFile = "./swagger.json"; // El archivo Swagger generado
