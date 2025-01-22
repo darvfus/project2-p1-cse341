@@ -1,32 +1,31 @@
 const mongodb = require('../data/database');
 const ObjectId = require('mongodb').ObjectId;
-const Movie = require('../models/movies'); // Asegúrate de tener el modelo Movie
+const Movie = require('../models/movie'); // Asegúrate de tener el modelo Movie
 
-// Obtener todas las películas
-const getAllMovies = async (req, res) => {
+// Get all movies
+const getAll = async (req, res) => {
   try {
     const result = await mongodb.getDb().db().collection('movies').find();
-    result.toArray().then((lists) => {
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json(lists);
-    });
+    const movies = await result.toArray();
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).json(movies);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching movies', error });
   }
 };
 
 // Obtener una película por su ID
-const getSingleMovie = async (req, res) => {
+const getSingle = async (req, res) => {
   try {
     const movieId = new ObjectId(req.params.id);
     const result = await mongodb.getDb().db().collection('movies').find({ _id: movieId });
-    result.toArray().then((lists) => {
-      if (lists.length === 0) {
-        return res.status(404).json({ message: 'Movie not found' });
-      }
+    const movie = await result.toArray();
+    if (movie.length > 0) {
       res.setHeader('Content-Type', 'application/json');
-      res.status(200).json(lists[0]);
-    });
+      res.status(200).json(movie[0]);
+    } else {
+      res.status(404).json({ message: 'Movie not found' });
+    }
   } catch (error) {
     res.status(500).json({ message: 'Error fetching movie', error });
   }
@@ -35,37 +34,28 @@ const getSingleMovie = async (req, res) => {
 // Crear una nueva película
 const createMovie = async (req, res) => {
   try {
-    const { title, genre, duration, releaseDate, director, cast, cinemaId } = req.body;
-    console.log('Creating movie with data:', req.body); // Log para verificar los datos
-
-    const validCinemaId = ObjectId.isValid(cinemaId) ? new ObjectId(cinemaId) : null;
-    if (!validCinemaId) {
-      return res.status(400).json({ message: 'Invalid cinemaId provided' });
-    }
-
     const movie = new Movie({
-      title,
-      genre,
-      duration,
-      releaseDate,
-      director,
-      cast,
-      cinemaId: validCinemaId
+      title: req.body.title,
+      genre: req.body.genre,
+      duration: req.body.duration,
+      releaseDates: req.body.releaseDate,
+      director: req.body.director,
+      cast: req.body.cast,
+      movieId: req.body.movieId
     });
 
-    const savedMovie = await movie.save();
-    console.log('Movie created:', savedMovie); // Log para verificar la respuesta
-
-    res.status(201).json({
-      message: "Película creada con éxito",
-      movie: savedMovie
-    });
+    const response = await mongodb.getDb().db().collection('movies').insertOne(movie);
+    if (response.acknowledged) {
+      res.status(201).json({
+        response: response,
+        message: "Created new movie successfully.",
+        movie: movie
+      });
+    } else {
+      res.status(500).json({ message: 'Error creating movie', error: response.error });
+    }
   } catch (error) {
-    console.log('Error creating movie:', error); // Log para errores
-    res.status(500).json({
-      message: 'Error al crear la película',
-      error: error.message
-    });
+    res.status(500).json({ message: 'Error creating movie', error });
   }
 };
 
@@ -73,42 +63,48 @@ const createMovie = async (req, res) => {
 const updateMovie = async (req, res) => {
   try {
     const movieId = new ObjectId(req.params.id);
-    const { title, genre, duration, releaseDate, director, cast, cinemaId } = req.body;
-
-    const validCinemaId = ObjectId.isValid(cinemaId) ? new ObjectId(cinemaId) : null;
-    if (!validCinemaId) {
-      return res.status(400).json({ message: 'Invalid cinemaId provided' });
-    }
-
-    const movie = {
-      title,
-      genre,
-      duration,
-      releaseDate,
-      director,
-      cast,
-      cinemaId: validCinemaId, // Usa el cinemaId validado
+    const updatedMovie = {
+      title: req.body.title,
+      genre: req.body.genre,
+      duration: req.body.duration,
+      releaseDates: req.body.releaseDate,
+      director: req.body.director,
+      cast: req.body.cast,
+      movieId: req.body.movieId
     };
+
+    const movieExists = await mongodb
+      .getDb()
+      .db()
+      .collection('movies')
+      .findOne({ _id: movieId });
+
+    if (!movieExists) {
+      return res.status(404).json({ message: 'Movie not found' });
+    }
 
     const response = await mongodb
       .getDb()
       .db()
       .collection('movies')
-      .replaceOne({ _id: movieId }, movie);
-
-    console.log('Update response:', response); // Log para verificar la respuesta de la actualización
+      .replaceOne({ _id: movieId }, updatedMovie);
 
     if (response.modifiedCount > 0) {
+      const updatedMovieData = await mongodb
+        .getDb()
+        .db()
+        .collection('movies')
+        .findOne({ _id: movieId });
+
       res.status(200).json({
-        message: "Película actualizada con éxito.",
-        movie: movie,
+        message: 'Updated movie successfully.',
+        movie: updatedMovieData
       });
     } else {
-      res.status(404).json({ message: 'Película no encontrada o no se hicieron cambios' });
+      res.status(500).json({ message: 'Error updating the movie', error: response.error });
     }
   } catch (error) {
-    console.log('Error updating movie:', error); // Log para errores
-    res.status(500).json({ message: 'Error al actualizar la película', error: error.message });
+    res.status(500).json({ message: 'Error updating movie', error });
   }
 };
 
@@ -131,8 +127,8 @@ const deleteMovie = async (req, res) => {
 };
 
 module.exports = {
-  getAllMovies,
-  getSingleMovie,
+  getAll,
+  getSingle,
   createMovie,
   updateMovie,
   deleteMovie,

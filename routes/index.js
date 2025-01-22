@@ -1,11 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
+// Ruta principal
 router.get('/', (req, res) => {
   res.send('Hello World');
 });
 
-// Correct use of the cinemas route
-router.use('/cinemas', require('./cinemas'));  // Make sure cinemas.js is exporting a router
+// Importar y usar las rutas de 'cinemas' y 'movies'
+router.use('/cinemas', require('./cinemas'));  // Asegúrate de que el archivo cinemas.js exista
+router.use('/movies', require('./movies'));   // Asegúrate de que el archivo movies.js exista
 
 module.exports = router;
