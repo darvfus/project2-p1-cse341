@@ -1,0 +1,86 @@
+// Local Host
+### Get all contacts
+GET http://localhost:3000/cinemas
+
+
+
+####User contat by id 
+
+
+GET http://localhost:3000/cinemas/679018f6be2c5a72e7e3e87b
+
+
+POST http://localhost:3000/movies HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "The Dark Knight",
+    "genre": "Action",
+    "duration": 152,
+    "releaseDate": "2008-07-18T00:00:00.000Z",
+    "director": "Christopher Nolan",
+  "cast": [
+    "Leonardo DiCaprio",
+    "Joseph Gordon-Levitt",
+    "Elliot Page",
+    "Tom Hardy"
+  ],
+  "cinemaId": "67901a66be2c5a72e7e3e880"  // Este es un ObjectId válido.
+}
+
+
+
+
+
+
+
+
+
+
+
+##PUT - update contact
+PUT http://localhost:3000/users/67903d741666c20fb2ccf443 HTTP/1.1
+content-type: application/json
+
+{
+  "title": "Indff",
+  "genre": "Science c",
+  "duration": 148,
+  "releaseDate": "2010-07-16T00:00:00.000Z",
+  "director": "Christopher Noldfdfan",
+  "cast": [
+    "Leonardo DiCaprdfdio",
+    "Joseph Gordon-Ldfdevitt",
+    "Elliot Pagdfe",
+    "Tom Hdfardy"
+  ],
+  "cinemaId": "679018f6be2c5a72e7e3e87b"
+}
+
+### DELETE contact
+DELETE http://localhost:3000/movies/64f34b2fc29a5a1f44a4e001 HTTP/1.1
+
+
+
+
+// REnder 
+### Get all contacts
+GET https://cse-341-project1-kiy0.onrender.com/users 
+
+
+### POST - create contact
+POST https://cse-341-project1-kiy0.onrender.com/users HTTP/1.1
+content-type: application/json
+
+{
+    "firstName": "Tailor", "lastName": "Smith", "email": "TSmith@gmail.com", "favoriteColor": "black", "birthday": "09-15-2000"
+}
+### PUT - update contact
+PUT https://cse-341-project1-kiy0.onrender.com/users/6786c1c476c009e242cbf396 HTTP/1.1
+content-type: application/json
+
+{
+    "firstName": "Tailor", "lastName": "Smith", "email": "TSmith@gmail.com", "favoriteColor": "black", "birthday": "09-15-2000"
+}
+### DELETE contact
+DELETE https://cse-341-project1-kiy0.onrender.com/users/678873a5f4181cd09c25355b HTTP/1.1
