@@ -1,8 +1,7 @@
-const mongodb = require('../data/database');
 const ObjectId = require('mongodb').ObjectId;
 const Movie = require('../models/movie'); // Asegúrate de tener el modelo Movie
-
-// Get all movies
+const mongodb = require('../data/database');
+// Obtener todas las películas
 const getAll = async (req, res) => {
   try {
     const result = await mongodb.getDb().db().collection('movies').find();
@@ -34,14 +33,37 @@ const getSingle = async (req, res) => {
 // Crear una nueva película
 const createMovie = async (req, res) => {
   try {
+    const { title, genre, duration, releaseDate, director, cast, cinemaId } = req.body;
+
+    // Validar campos requeridos
+    if (!title || typeof title !== 'string') {
+      return res.status(400).json({ message: 'The field "title" is required and must be a string.' });
+    }
+    if (!genre || typeof genre !== 'string') {
+      return res.status(400).json({ message: 'The field "genre" is required and must be a string.' });
+    }
+    if (!duration || typeof duration !== 'number' || duration <= 0) {
+      return res.status(400).json({ message: 'The field "duration" is required and must be a positive number.' });
+    }
+    if (!req.body.releaseDate || isNaN(Date.parse(req.body.releaseDate))) {
+      return res.status(400).json({ message: 'The field "releaseDate" must be a valid date.' });
+    }
+    
+    if (!director || typeof director !== 'string') {
+      return res.status(400).json({ message: 'The field "director" is required and must be a string.' });
+    }
+    if (!cast || !Array.isArray(cast) || cast.some(item => typeof item !== 'string')) {
+      return res.status(400).json({ message: 'The field "cast" is required and must be an array of strings.' });
+    }
+
     const movie = new Movie({
-      title: req.body.title,
-      genre: req.body.genre,
-      duration: req.body.duration,
-      releaseDates: req.body.releaseDate,
-      director: req.body.director,
-      cast: req.body.cast,
-      movieId: req.body.movieId
+      title,
+      genre,
+      duration,
+      releaseDate,
+      director,
+      cast,
+      cinemaId
     });
 
     const response = await mongodb.getDb().db().collection('movies').insertOne(movie);
@@ -63,14 +85,36 @@ const createMovie = async (req, res) => {
 const updateMovie = async (req, res) => {
   try {
     const movieId = new ObjectId(req.params.id);
+    const { title, genre, duration, releaseDate, director, cast, cinemaId } = req.body;
+
+    // Validar campos requeridos
+    if (!title || typeof title !== 'string') {
+      return res.status(400).json({ message: 'The field "title" is required and must be a string.' });
+    }
+    if (!genre || typeof genre !== 'string') {
+      return res.status(400).json({ message: 'The field "genre" is required and must be a string.' });
+    }
+    if (!duration || typeof duration !== 'number' || duration <= 0) {
+      return res.status(400).json({ message: 'The field "duration" is required and must be a positive number.' });
+    }
+    if (!releaseDate || !(releaseDate instanceof Date)) {
+      return res.status(400).json({ message: 'The field "releaseDate" is required and must be a valid date.' });
+    }
+    if (!director || typeof director !== 'string') {
+      return res.status(400).json({ message: 'The field "director" is required and must be a string.' });
+    }
+    if (!cast || !Array.isArray(cast) || cast.some(item => typeof item !== 'string')) {
+      return res.status(400).json({ message: 'The field "cast" is required and must be an array of strings.' });
+    }
+
     const updatedMovie = {
-      title: req.body.title,
-      genre: req.body.genre,
-      duration: req.body.duration,
-      releaseDates: req.body.releaseDate,
-      director: req.body.director,
-      cast: req.body.cast,
-      movieId: req.body.movieId
+      title,
+      genre,
+      duration,
+      releaseDate,
+      director,
+      cast,
+      cinemaId
     };
 
     const movieExists = await mongodb
@@ -116,10 +160,10 @@ const deleteMovie = async (req, res) => {
 
     if (response.deletedCount > 0) {
       res.status(200).json({
-        message: "Película eliminada con éxito.",
+        message: "Movie deleted successfully.",
       });
     } else {
-      res.status(404).json({ message: 'Película no encontrada' });
+      res.status(404).json({ message: 'Movie not found' });
     }
   } catch (error) {
     res.status(500).json({ message: 'Error deleting movie', error });

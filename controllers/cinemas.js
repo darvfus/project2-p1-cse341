@@ -34,14 +34,36 @@ const getSingle = async (req, res) => {
 // Create a new cinema
 const createCinema = async (req, res) => {
   try {
+    const { name, location, capacity, openingHours, amenities, contactNumber, isOpen } = req.body;
+
+    // Validate required fields and types
+    if (!name || typeof name !== 'string') {
+      return res.status(400).json({ message: 'The field "name" is required and must be a string.' });
+    }
+    if (!location || typeof location !== 'string') {
+      return res.status(400).json({ message: 'The field "location" is required and must be a string.' });
+    }
+    if (!capacity || typeof capacity !== 'number' || capacity <= 0) {
+      return res.status(400).json({ message: 'The field "capacity" must be a positive number.' });
+    }
+    if (!openingHours || typeof openingHours !== 'string') {
+      return res.status(400).json({ message: 'The field "openingHours" is required and must be a string.' });
+    }
+    if (!contactNumber || typeof contactNumber !== 'string') {
+      return res.status(400).json({ message: 'The field "contactNumber" is required and must be a string.' });
+    }
+    if (typeof isOpen !== 'boolean') {
+      return res.status(400).json({ message: 'The field "isOpen" must be a boolean.' });
+    }
+
     const cinema = new Cinema({
-      name: req.body.name,
-      location: req.body.location,
-      capacity: req.body.capacity,
-      openingHours: req.body.openingHours,
-      amenities: req.body.amenities,
-      contactNumber: req.body.contactNumber,
-      isOpen: req.body.isOpen
+      name,
+      location,
+      capacity,
+      openingHours,
+      amenities,
+      contactNumber,
+      isOpen
     });
 
     const response = await mongodb.getDb().db().collection('cinemas').insertOne(cinema);
@@ -63,14 +85,36 @@ const createCinema = async (req, res) => {
 const updateCinema = async (req, res) => {
   try {
     const cinemaId = new ObjectId(req.params.id);
+    const { name, location, capacity, openingHours, amenities, contactNumber, isOpen } = req.body;
+
+    // Validate required fields and types
+    if (!name || typeof name !== 'string') {
+      return res.status(400).json({ message: 'The field "name" is required and must be a string.' });
+    }
+    if (!location || typeof location !== 'string') {
+      return res.status(400).json({ message: 'The field "location" is required and must be a string.' });
+    }
+    if (!capacity || typeof capacity !== 'number' || capacity <= 0) {
+      return res.status(400).json({ message: 'The field "capacity" must be a positive number.' });
+    }
+    if (!openingHours || typeof openingHours !== 'string') {
+      return res.status(400).json({ message: 'The field "openingHours" is required and must be a string.' });
+    }
+    if (!contactNumber || typeof contactNumber !== 'string') {
+      return res.status(400).json({ message: 'The field "contactNumber" is required and must be a string.' });
+    }
+    if (typeof isOpen !== 'boolean') {
+      return res.status(400).json({ message: 'The field "isOpen" must be a boolean.' });
+    }
+
     const updatedCinema = {
-      name: req.body.name,
-      location: req.body.location,
-      capacity: req.body.capacity,
-      openingHours: req.body.openingHours,
-      amenities: req.body.amenities,
-      contactNumber: req.body.contactNumber,
-      isOpen: req.body.isOpen
+      name,
+      location,
+      capacity,
+      openingHours,
+      amenities,
+      contactNumber,
+      isOpen
     };
 
     const cinemaExists = await mongodb
