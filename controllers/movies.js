@@ -45,9 +45,10 @@ const createMovie = async (req, res) => {
     if (!duration || typeof duration !== 'number' || duration <= 0) {
       return res.status(400).json({ message: 'The field "duration" is required and must be a positive number.' });
     }
-    if (!req.body.releaseDate || isNaN(Date.parse(req.body.releaseDate))) {
-      return res.status(400).json({ message: 'The field "releaseDate" must be a valid date.' });
-    }
+    if (!releaseDate || isNaN(Date.parse(releaseDate))) {
+      return res.status(400).json({ message: 'The field "releaseDate" is required and must be a valid ISO date string.' });
+  }
+  
     
     if (!director || typeof director !== 'string') {
       return res.status(400).json({ message: 'The field "director" is required and must be a string.' });

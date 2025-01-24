@@ -208,9 +208,6 @@
             "schema": {
               "type": "object",
               "properties": {
-                "releaseDate": {
-                  "example": "any"
-                },
                 "title": {
                   "example": "any"
                 },
@@ -218,6 +215,9 @@
                   "example": "any"
                 },
                 "duration": {
+                  "example": "any"
+                },
+                "releaseDate": {
                   "example": "any"
                 },
                 "director": {

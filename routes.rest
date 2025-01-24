@@ -58,7 +58,7 @@ POST https://project2-p1-cse341.onrender.com/movies HTTP/1.1
 content-type: application/json
 
 {
-  "title": "Romero",
+  "title": "Vergara",
     "genre": "Science Fictidfdfdon",
     "duration": 148,
     "releaseDate": "2010-07-16T00:00:00.000Z",
@@ -72,17 +72,24 @@ content-type: application/json
     "cinemaId": "679018f6be2c5a72e7e3e"
   }
 ### PUT - update contact
-PUT https://project2-p1-cse341.onrender.com/movies/67913b0847dedaf6daa75cee HTTP/1.1
+PUT https://project2-p1-cse341.onrender.com/movies/679421a88cf4c993a7a65c60 HTTP/1.1
 content-type: application/json
 
-{
-    "name": "Cine Arte Oaxaca",
-    "location": "Oaxaca, Oaxaca",
-    "capacity": 90,
-    "openingHours": "12:00 PM - 10:00 PM",
-    "amenities": ["Indie Movies", "Coffee Shop"],
-    "contactNumber": "9512345678",
-    "isOpen": true
-  }
+ {
+  "title": "d",
+  "genre": "Science Fiction",
+  "duration": 148,
+  "releaseDate": "2010-07-16T00:00:00.000Z",
+  "director": "Christopher Nolan",
+  "cast": [
+    "Leonardo DiCaprio",
+    "Joseph Gordon-Levitt",
+    "Elliot Page",
+    "Tom Hardy"
+  ],
+  "cinemaId": "679018f6be2c5a72e7e3e87b"
+}
+
+  
 ### DELETE contact
-DELETE https://project2-p1-cse341.onrender.com/movies/67913b0847dedaf6daa75cee HTTP/1.1
+DELETE https://project2-p1-cse341.onrender.com/movies/679420bc8cf4c993a7a65c5f HTTP/1.1
